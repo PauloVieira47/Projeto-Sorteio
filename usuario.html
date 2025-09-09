@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sorteio • Inscrição</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #2B504A;
+      --card: #FFFFFF;
+      --text: #0B0E0D;
+      --text-inv: #FFFFFF;
+      --muted: #566A66;
+      --primary: #2B504A;
+      --primary-700:#21413C;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.15);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0; background: var(--bg); color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    .page{ min-height:100svh; display:grid; grid-template-rows:auto 1fr auto; }
+    header{ padding: 24px 16px 8px; display:flex; justify-content:center; }
+    .logo-box{
+      width:min(280px, 70vw); height:96px; border-radius:12px;
+      background: linear-gradient(135deg, #2B504A, #396E66);
+      display:grid; place-items:center; color:#fff; font-weight:800; letter-spacing:.02em;
+      box-shadow: var(--shadow);
+    }
+    main{ display:grid; place-items:center; padding: clamp(12px, 3vw, 24px); }
+    .card{
+      width:100%; max-width:480px; background:var(--card);
+      border-radius:var(--radius); box-shadow: var(--shadow);
+      padding: clamp(16px, 3vw, 28px);
+    }
+    .title{ margin:0 0 4px; font-size: clamp(20px, 4vw, 26px); font-weight:800; letter-spacing:-.02em; }
+    .subtitle{ margin:0 0 18px; font-size:14px; color:#556160; }
+    form{ display:grid; gap:14px; }
+    .field{ display:grid; gap:6px; }
+    .field label{ font-size:14px; font-weight:600; color:#2B2F2E; }
+    .input{
+      width:100%; border:1px solid #E3E6E5; background:#fff; border-radius:12px;
+      padding:12px 14px; font-size:16px; line-height:1.3; outline:none;
+      transition: box-shadow .2s, border-color .2s;
+    }
+    .input::placeholder{ color:#9BA5A3; }
+    .input:focus{ border-color:#C5CFCD; box-shadow:0 0 0 4px rgba(43,80,74,.12); }
+    .error{ color:#B00020; font-size:13px; display:none; }
+    .field.invalid .error{ display:block; }
+    .field.invalid .input{ border-color:#E8A3A3; box-shadow:0 0 0 4px rgba(176,0,32,.08); }
+
+    .lgpd{ display:grid; grid-template-columns:18px 1fr; gap:10px; align-items:start; margin-top:6px; }
+    .checkbox{
+      appearance:none; width:18px; height:18px; margin:0; border-radius:5px;
+      border:1.5px solid #CBD6D3; display:grid; place-items:center; transition:.2s;
+    }
+    .checkbox:checked{ background:var(--primary); border-color:var(--primary); }
+    .checkbox:checked::after{ content:''; width:10px; height:10px; border-radius:3px; background:#fff; }
+
+    .actions{ margin-top:6px; display:grid; gap:10px; }
+    .btn{
+      appearance:none; border:0; border-radius:12px; padding:14px 16px;
+      font-weight:800; font-size:16px; cursor:pointer;
+      transition: transform .02s ease, background-color .2s ease, box-shadow .2s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{ color:#fff; background:var(--primary); box-shadow:0 6px 18px rgba(43,80,74,.28); }
+    .btn-primary:hover{ background:var(--primary-700); }
+    .btn-outline{ background:transparent; color:var(--primary); border:2px solid var(--primary); }
+
+    .success{ display:none; text-align:center; }
+    .success .badge{
+      display:inline-grid; place-items:center; width:64px; height:64px; border-radius:16px;
+      background:#EAF4F1; color:var(--primary); font-weight:900; font-size:22px;
+      box-shadow: inset 0 0 0 3px rgba(43,80,74,.08); margin:4px 0 10px;
+    }
+    .success h2{ margin:6px 0 6px; font-size: clamp(20px, 4.5vw, 28px); letter-spacing:-.02em; }
+    .ticket{
+      margin:14px auto 4px; width:min(360px, 92%); background:#0E1514; color:#F2FFFC;
+      border-radius:14px; padding:16px 18px; display:grid; gap:4px; box-shadow:0 12px 30px rgba(0,0,0,.25);
+    }
+    .ticket small{ opacity:.8; letter-spacing:.02em; }
+    .ticket .number{ font-size: clamp(26px, 8vw, 40px); font-weight:900; letter-spacing:.08em; }
+    footer{ color:#E6EEEC; font-size:12px; text-align:center; padding:10px 0 16px; }
+
+    @media (min-width: 768px){
+      header{ padding: 36px 24px 8px; }
+      .logo-box{ height:110px; }
+      .card{ padding:28px; }
+    }
+    @supports (padding: max(0px)){
+      main{ padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo-box" aria-label="Logo do evento">LOGO / EVENTO</div>
+    </header>
+
+    <main>
+      <section class="card" id="card">
+        <!-- Formulário -->
+        <div class="form-view" id="formView" role="region" aria-live="polite">
+          <h1 class="title">Participe do sorteio</h1>
+          <p class="subtitle">Preencha seus dados para receber o número de participação.</p>
+
+          <form id="form">
+            <div class="field" id="f-name">
+              <label for="name">Nome completo</label>
+              <input id="name" name="name" class="input" type="text" placeholder="Ex.: Ana Silva" autocomplete="name" required />
+              <small class="error">Digite seu nome completo (nome e sobrenome).</small>
+            </div>
+
+            <div class="field" id="f-email">
+              <label for="email">E-mail</label>
+              <input id="email" name="email" class="input" type="email" placeholder="voce@exemplo.com" autocomplete="email" required />
+              <small class="error">Informe um e-mail válido.</small>
+            </div>
+
+            <div class="field" id="f-phone">
+              <label for="phone">Telefone / WhatsApp</label>
+              <input id="phone" name="phone" class="input" inputmode="numeric" placeholder="(DDD) 9 0000-0000" autocomplete="tel"  />
+              <small class="error">Informe um número com DDD.</small>
+            </div>
+
+            <label class="lgpd">
+              <input type="checkbox" id="consent" class="checkbox" required />
+              <small>Concordo em participar do sorteio e autorizo o uso dos meus dados para esta finalidade durante o evento (LGPD).</small>
+            </label>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="submitBtn" type="submit">Receber meu número</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sucesso -->
+        <div class="success" id="successView" role="region" aria-live="polite">
+          <div class="badge" aria-hidden="true">✓</div>
+          <h2>Inscrição confirmada!</h2>
+          <p class="subtitle" id="userNameText"></p>
+
+          <div class="ticket" aria-label="Número do sorteio">
+            <small>Seu número de participação</small>
+            <div class="number" id="ticketNumberText">#0000</div>
+          </div>
+
+          <div class="actions" style="margin-top:12px">
+            <button class="btn btn-primary" id="btnCopy">Copiar número</button>
+            <button class="btn btn-outline" id="btnNew">Fazer outra inscrição</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© <span id="year"></span> Sorteio do Evento — Layout mobile-first</footer>
+  </div>
+
+  <script>
+    // ===== Helpers
+    const $ = (sel) => document.querySelector(sel);
+    const pad = (n, size=4) => String(n).padStart(size, '0');
+    const onlyDigits = (v) => (v||'').replace(/\D/g, '');
+
+    // máscara BR simples
+    function formatPhone(digits){
+      const d = onlyDigits(digits).slice(0, 11);
+      if(d.length <= 2) return '(' + d;
+      if(d.length <= 6) return '(' + d.slice(0,2) + ') ' + d.slice(2);
+      if(d.length <= 10) return '(' + d.slice(0,2) + ') ' + d.slice(2,6) + '-' + d.slice(6);
+      return '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+    }
+
+    // validações
+    const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||'');
+    const isName  = (v) => (v||'').trim().split(/\s+/).length >= 2 && (v||'').trim().length >= 5;
+    const isPhone = (v) => onlyDigits(v).length >= 10;
+
+    // ===== Estado (somente front para visual)
+    const EVENT_SLUG = 'default';
+    const LS_KEY = 'sorteio:' + EVENT_SLUG; // mesmo usado no Admin
+
+    function loadState(){
+      try{
+        const s = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+        return { counter: s.counter||0, people: s.people||{}, list: Array.isArray(s.list)? s.list: [] };
+      }catch(e){
+        return { counter:0, people:{}, list:[] };
+      }
+    }
+    function saveState(state){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+    function findOrCreateTicket(name, email, phone){
+      const state = loadState();
+      const key = (email||'').toLowerCase() + '|' + onlyDigits(phone);
+
+      // se já existe, retorna o mesmo ticket
+      if(state.people[key]){
+        const ticket = state.people[key];
+        return { ticket, existed: true };
+      }
+
+      // novo ticket
+      state.counter += 1;
+      const ticket = state.counter;
+      state.people[key] = ticket;
+      state.list.push({
+        ticket,
+        name: String(name||'').trim(),
+        email: String(email||'').trim().toLowerCase(),
+        phone: formatPhone(phone),
+        createdAt: Date.now()
+      });
+      saveState(state);
+      return { ticket, existed: false };
+    }
+
+    // ===== Interações
+    const $form = $('#form');
+    const $fName = $('#f-name');
+    const $fEmail = $('#f-email');
+    const $fPhone = $('#f-phone');
+    const $name = $('#name');
+    const $email = $('#email');
+    const $phone = $('#phone');
+    const $consent = $('#consent');
+
+    const $formView = $('#formView');
+    const $successView = $('#successView');
+    const $ticketNumberText = $('#ticketNumberText');
+    const $userNameText = $('#userNameText');
+    const $btnCopy = $('#btnCopy');
+    const $btnNew = $('#btnNew');
+
+    $('#year').textContent = new Date().getFullYear();
+
+    $phone.addEventListener('input', (e) => {
+      const before = e.target.value;
+      e.target.value = formatPhone(before);
+    });
+
+    function setInvalid(field, cond){ field.classList.toggle('invalid', cond); }
+
+    $form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $name.value.trim();
+      const email = $email.value.trim();
+      const phone = $phone.value.trim();
+
+      const vName = !isName(name);
+      const vEmail = !isEmail(email);
+      const vPhone = !isPhone(phone);
+      const vConsent = !$consent.checked;
+
+      setInvalid($fName, vName);
+      setInvalid($fEmail, vEmail);
+      setInvalid($fPhone, vPhone);
+
+      if (vName || vEmail || vPhone || vConsent) return;
+
+      const { ticket } = findOrCreateTicket(name, email, phone);
+
+      // UI sucesso
+      $formView.style.display = 'none';
+      $successView.style.display = 'block';
+      $userNameText.textContent = name;
+      $ticketNumberText.textContent = '#' + pad(ticket, 4);
+    });
+
+    $btnCopy.addEventListener('click', async () => {
+      const text = $ticketNumberText.textContent.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        $btnCopy.textContent = 'Copiado!';
+        setTimeout(()=> $btnCopy.textContent = 'Copiar número', 1500);
+      }catch{
+        alert('Número: ' + text);
+      }
+    });
+
+    $btnNew.addEventListener('click', () => {
+      $successView.style.display = 'none';
+      $formView.style.display = 'block';
+      $form.reset();
+      $phone.value = '';
+      $name.focus();
+    });
+  </script>
+</body>
+</html>
