@@ -1,0 +1,39 @@
+-- cria (se não existir) e seleciona o schema
+CREATE DATABASE IF NOT EXISTS projetosorteio
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_0900_ai_ci;
+USE projetosorteio;
+
+-- (opcional) apaga as tabelas se já existirem
+DROP TABLE IF EXISTS sorteados;
+DROP TABLE IF EXISTS participants;
+
+-- participantes
+CREATE TABLE participants (
+  numero_bilhete INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name           VARCHAR(120) NOT NULL,
+  email          VARCHAR(190) DEFAULT NULL,
+  phone          VARCHAR(20)  DEFAULT NULL,
+  `hora-data`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (numero_bilhete),
+  UNIQUE KEY uq_email (email),
+  UNIQUE KEY uq_phone (phone)
+) ENGINE=InnoDB;
+
+-- sorteados (liga com participants.numero_bilhete)
+CREATE TABLE sorteados (
+  id               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  numero_sorteado  INT UNSIGNED NOT NULL,
+  `hora-data`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_numero_sorteado_unico (numero_sorteado),
+  CONSTRAINT fk_sorteados_numero
+    FOREIGN KEY (numero_sorteado)
+    REFERENCES participants (numero_bilhete)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB;
+
+-- (opcional) dados de teste
+INSERT INTO participants (name, email, phone) VALUES
+('Ana Paula','ana@demo.com','11911111111'),
+('Bruno Silva','bruno@demo.com','11922222222');
