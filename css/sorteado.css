@@ -1,0 +1,36 @@
+
+    :root{
+      --bg: #0B1211;
+      --accent: #35B59B;
+      --paper: #0E1514;
+      --glow: 0 0 0 6px rgba(53,181,155,.08), 0 0 120px rgba(53,181,155,.15);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background: radial-gradient(1200px 1200px at 50% -10%, #17332F, #0B1211 70%);
+      color:#EAF7F4;font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    .stage{ min-height:100svh;display:grid;place-items:center;padding: clamp(10px,2vw,24px) }
+    .wrap{ width:min(1100px,96%);display:grid;gap:18px;justify-items:center;text-align:center }
+    .badge{ display:inline-grid;place-items:center;width:72px;height:72px;border-radius:18px;background: #0E1514;box-shadow: var(--glow);font-weight:900 }
+    h1{ margin:4px 0 2px;font-size: clamp(24px, 5vw, 56px);letter-spacing:-.015em }
+    p{ margin:0;color:#95A7A3 }
+    .slot{
+      margin-top: 10px;
+      width:min(900px, 96%); background: var(--paper);
+      border-radius: 20px; padding: clamp(16px, 3vw, 26px);
+      display:grid;gap:8px; box-shadow: 0 20px 80px rgba(0,0,0,.45);
+    }
+    .hint{color:#8FB4AD}
+    .num{
+      font-size: clamp(40px, 10vw, 120px);
+      font-weight: 900; letter-spacing: .14em;
+      text-shadow: 0 6px 28px rgba(0,0,0,.65);
+    }
+    .name{ font-size: clamp(22px, 4.2vw, 42px); font-weight: 800; letter-spacing: -.01em }
+    .rolling{ animation: roll 1.2s ease-in-out infinite alternate; opacity:.85 }
+    @keyframes roll{
+      from{ transform: translateY(2px); filter: blur(0px); opacity:.85 }
+      to{ transform: translateY(-2px); filter: blur(.2px); opacity:1 }
+    }
